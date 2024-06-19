@@ -1,0 +1,43 @@
+import numpy as np
+
+# Define random variables X, Y, and Z
+X = np.random.randint(0, 2, size=100)  # Binary random variable
+Y = np.random.randint(0, 2, size=100)  # Binary random variable
+Z = np.random.randint(0, 2, size=100)  # Binary random variable
+
+# Calculate joint probabilities
+joint_prob_XYZ = np.mean((X == 1) & (Y == 1) & (Z == 1))  # P(X=1, Y=1, Z=1)
+joint_prob_XY = np.mean((X == 1) & (Y == 1))  # P(X=1, Y=1)
+joint_prob_XZ = np.mean((X == 1) & (Z == 1))  # P(X=1, Z=1)
+joint_prob_YZ = np.mean((Y == 1) & (Z == 1))  # P(Y=1, Z=1)
+
+# Calculate conditional probabilities
+conditional_prob_X_given_YZ = joint_prob_XYZ / joint_prob_YZ  # P(X=1 | Y=1, Z=1)
+conditional_prob_X_given_Y = joint_prob_XY / np.mean(Y == 1)  # P(X=1 | Y=1)
+conditional_prob_X_given_Z = joint_prob_XZ / np.mean(Z == 1)  # P(X=1 | Z=1)
+
+# Check for conditional independence properties
+print("Conditional Independence Properties:")
+print("1. Independence of X and Y given Z:")
+print(np.isclose(conditional_prob_X_given_YZ, conditional_prob_X_given_Y, atol=1e-6))  # Check if P(X|Y,Z) ~= P(X|Y)
+print()
+print("2. Independence of X and Z given Y:")
+print(np.isclose(conditional_prob_X_given_YZ, conditional_prob_X_given_Z, atol=1e-6))  # Check if P(X|Y,Z) ~= P(X|Z)
+Conditional Independence Properties:
+1. Independence of X and Y given Z:
+False
+
+2. Independence of X and Z given Y:
+False
+import matplotlib.pyplot as plt
+
+# Plotting the conditional probabilities
+labels = ['P(X=1 | Y=1, Z=1)', 'P(X=1 | Y=1)', 'P(X=1 | Z=1)']
+probabilities = [conditional_prob_X_given_YZ, conditional_prob_X_given_Y, conditional_prob_X_given_Z]
+
+plt.bar(labels, probabilities)
+plt.ylabel('Probability')
+plt.title('Conditional Probabilities of X given Y and Z')
+plt.ylim(0, 1)  # Setting y-axis limits to [0, 1]
+plt.grid(True)
+plt.show()
